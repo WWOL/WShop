@@ -7,7 +7,7 @@
 public class WShopListener extends PluginListener{
 	
 	public boolean onCommand(Player p, String[] s){
-		if (s[0].equalsIgnoreCase("/ws")){
+		if (s[0].equalsIgnoreCase("/ws") || s[0].equalsIgnoreCase("/wshop")){
 			try {
 				if (s[1].equalsIgnoreCase("sell") && p.canUseCommand("/ws_sell")){
 					Item inHand = p.getItemStackInHand();
@@ -51,7 +51,12 @@ public class WShopListener extends PluginListener{
 				if (sign.getText(1).equalsIgnoreCase("sell")){
 					WShopActions.sellItem(p, inHand);
 				} else if (sign.getText(1).equalsIgnoreCase("buy")){
-					Item item = WShopActions.phraseItem(sign.getText(2).replace("_", " ").replace(":", " "));
+					Item item;
+					if (sign.getText(2).equalsIgnoreCase("this")){
+						item = p.getItemStackInHand();
+					} else {
+						item = WShopActions.phraseItem(sign.getText(2).replace("_", " ").replace(":", " "));
+					}
 					WShopActions.buyItem(p, item);
 				} else if (sign.getText(1).equalsIgnoreCase("info")){
 					Item item;

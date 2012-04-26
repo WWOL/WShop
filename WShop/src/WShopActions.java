@@ -16,7 +16,6 @@ public class WShopActions {
 	 * 
 	 * @param p - The player trying to sell.
 	 * @param item - The item to sell, commonly the players help item. 
-	 * @return - True if the selling was successful.
 	 */
 	public static void sellItem(Player p, Item item){
 		String key = item.getItemId() + ":" + item.getDamage();
@@ -36,7 +35,6 @@ public class WShopActions {
 	 * 
 	 * @param p - The player buying an item.
 	 * @param item - The item the player wants to buy.
-	 * @return - True if the buying was successful.
 	 */
 	public static void buyItem(Player p, Item item){
 		String key = item.getItemId() + ":" + item.getDamage();
@@ -50,9 +48,14 @@ public class WShopActions {
 			return;
 		}//end if
 		double price = PRICES.getDouble(key + "_buy", -1);
+		if (price == -1){
+			p.sendMessage(WShop.PRE + "The server does not sell that item at this time." + key);
+			return;
+		}
 		if (canPay(p, price)){
 			payPlayer(p, -price);// Make sure we charge them here, not pay them. Negate the price.
 			p.giveItem(item);
+			ITEMS.setInt(key, amount - item.getAmount());
 			p.sendMessage(WShop.PRE + "Bought an item. ID:" + item.getItemId() + ", Damage:" + item.getDamage() + ", Amount:" + item.getAmount() + ", Cost:" + price);
 		} else {
 			p.sendMessage(WShop.PRE + "You do not have enough money to buy " + key);
